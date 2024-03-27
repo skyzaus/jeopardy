@@ -74,11 +74,11 @@ for (let i = keys.length - 1; i > 0; i--) {
 
 // Get the first 6 numbers from the array
 let randomKeys = keys.slice(0, 20);
-
+console.log(randomKeys);
 // log 6 random keys from the object
 
 
-let numbersToRemove = [0];
+let numbersToRemove = [0, 7, 1, 5];
 
     let filteredCategoryIds = topicID.filter(item => !numbersToRemove.includes(item));
 
@@ -96,9 +96,9 @@ console.log(filteredCategoryIds); // [1, 2, 4, 5, 8, 9]
 
 
 
-console.log(randomKeys); 
+ 
 
-  return randomKeys;
+  return filteredCategoryIds;
 }
 
 getCategoryIds()
@@ -176,6 +176,11 @@ async function fillTable() {
 
         selectedCategories.push(catId); // Add the selected category ID to the array
 
+       
+       console.log(selectedCategories)
+       
+       
+       
         const category = await getCategory(catId);
         if (category) {
             const th = document.createElement('th');
@@ -191,7 +196,7 @@ async function fillTable() {
       for (let j = 0; j < 6; j++) {
         const td = document.createElement('td');
         td.textContent = '?';
-       // td.addEventListener('click', clickCell);
+        td.addEventListener('click', handleClick);
         tr.appendChild(td);
       }
       tableBody.appendChild(tr);
@@ -209,7 +214,45 @@ async function fillTable() {
  * */
 
 function handleClick(evt) {
-}
+    const cell = evt.target;
+  const rowIndex = cell.parentNode.rowIndex - 2; //We use -2 here to account for the array index starting at 0, and the table head not counting for questions. This hard-coding is not best practice but it fixes the current issue.
+  const columnIndex = cell.cellIndex;
+  const category = categories[columnIndex];
+
+  if (!category || !category.clues) {
+    console.error('Invalid category or clues are undefined');
+    return;
+  }
+  if (rowIndex < 0 || rowIndex > category.clues.length) {
+    console.error('Invalid row index');
+    return;
+  }
+  
+  const clue = category.clues[rowIndex];
+  if (!clue) {
+    console.error('Clue is undefined');
+    return;
+  }
+
+ 
+  if (!clue.showing) {
+    cell.textContent = clue.question;
+    clue.showing = 'question';
+    cell.classList.add('clicked');
+  } else if (clue.showing === 'question') {
+  //   cell.textContent = '';
+  //   clue.showing = 'hidden';
+  //   cell.classList.remove('clicked');
+  // } else if (clue.showing === 'hidden') {
+    cell.textContent = clue.answer;
+    clue.showing = 'answer';
+    cell.classList.add('answer');
+  } else {
+    return;
+  }
+} // The logic that should be followed is: if the default is showing, click the box to show the question. if the question is showing, click the box to reveal the answer. if the answer is showing, do nothing. currently, what is happening is we go from ? to blank on the first click, and blank to the answer on the second click. we need to see ? to question on click 1, and question to answer on click 2.
+
+
 
 /** Wipe the current Jeopardy board, show the loading spinner,
  * and update the button used to fetch data.
@@ -235,7 +278,7 @@ async function setupAndStart() {
 }
 
 /** On click of start / restart button, set up game. */
-$("#start").on("click", getCategoryIds);
+$("#start").on("click", fillTable);
 // TODO
 
 /** On page load, add event handler for clicking clues */
