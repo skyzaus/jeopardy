@@ -8,42 +8,59 @@
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Jeopardy</title>
-    <link
-    href="https://bootswatch.com/5/superhero/bootstrap.css"
-    rel="stylesheet"
-  />
-  
+     <link href="https://bootswatch.com/5/superhero/bootstrap.css" rel="stylesheet">
     <link
       href="https://fonts.googleapis.com/css?family=Copse&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="jeopardy.css" />
+    <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
     />
   </head>
-  <body>
-    <header>
-      <h1>Jeopardy!</h1>
-      <button id="start">Start!</button>
-    </header>
-
   
-    <table id="jeopardy">
-      <thead>
-        <tr>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-        </tr>
-      </tbody>
-    </table>
+  
+  <body class="panel panel-default text-primary">
+    <header class="text-center">
+      <div class="jumbotron">
+    <h1 class="display-4"> Jeopardy!</h1>
+      <button type="button" class="btn btn-outline-warning" id="start">Start!</button>
+    </div>
+      </header>
+
+    <div class="text-center" id="spin-container">
+      <i class="fa fa-spin fa-spinner"></i>
+    </div>
+
+    
+    
+     <div class="container">
+  <div class="row">
+    
+    
+    <table id="jeopardy"  style='table-layout:fixed'>
+    <thead class="thead-dark">
+      <tr>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      </tr>
+    </tbody>
+  </table>
+
+
+   </div>
+</div>
 
     <script src="https://unpkg.com/jquery"></script>
     <script src="https://unpkg.com/axios/dist/axios.js"></script>
     <script src="https://unpkg.com/lodash"></script>
+   
+    
+    
+    
     <script src="jeopardy.js"></script>
   </body>
 </html>

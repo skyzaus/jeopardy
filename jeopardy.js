@@ -77,7 +77,7 @@ let randomKeys = keys.slice(0, 20);
 console.log(randomKeys);
 // log 6 random keys from the object
 
-
+//filter out and remove from array bad ID's'
 let numbersToRemove = [0, 7, 1, 5];
 
     let filteredCategoryIds = topicID.filter(item => !numbersToRemove.includes(item));
@@ -117,23 +117,22 @@ getCategoryIds()
 
 
 async function getCategory(catId) {
-   const res = await axios.get(`https://rithm-jeopardy.herokuapp.com/api/category?id=${catId}`);
+    
+      const response = await axios.get(`${APIURL}/category?id=${catId}`);
+     //get and store required data from api
+      const categoryData = {
+          title: response.data.title,
+          clues: response.data.clues.map(clue => ({
+              question: clue.question,
+              answer: clue.answer,
+              showing: null
+          }))
+      };
+      console.log(categoryData)
+      return categoryData;
+  
+  }
 
-
-
-   const catData = {
-        id: res.data.id,
-        title: res.data.title,
-        clues: res.data.clues.slice(0,2)
-    };
-
-
-
-   console.log(catData) 
-
-    // return category with only 2 clues
-    return catData
-}
 
 
 
@@ -184,20 +183,29 @@ async function fillTable() {
         const category = await getCategory(catId);
         if (category) {
             const th = document.createElement('th');
+            console.log(th)
+             th.classList.add("col");
             th.textContent = category.title;
             tableHead.appendChild(th);
             categories.push(category);
+        
         }
+
+        
     }
     //This helps us fill the 6 category <thead> with the names of each category. It uses a for loop that adds the category to the table up until 6 are loaded. It also filters out repeated categories.
 
     for (let i = 0; i < 5; i++) {
       const tr = document.createElement('tr');
+      //tr.class = "col";
+      tr.classList.add("col");
+      console.log(tr)
       for (let j = 0; j < 6; j++) {
         const td = document.createElement('td');
         td.textContent = '?';
         td.addEventListener('click', handleClick);
         tr.appendChild(td);
+      console.log(td)
       }
       tableBody.appendChild(tr);
     }
@@ -215,9 +223,16 @@ async function fillTable() {
 
 function handleClick(evt) {
     const cell = evt.target;
-  const rowIndex = cell.parentNode.rowIndex - 2; //We use -2 here to account for the array index starting at 0, and the table head not counting for questions. This hard-coding is not best practice but it fixes the current issue.
-  const columnIndex = cell.cellIndex;
+  console.log(cell)
+  
+    const rowIndex = cell.parentNode.rowIndex - 2; //We use -2 here to account for the array index starting at 0, and the table head not counting for questions. This hard-coding is not best practice but it fixes the current issue.
+  console.log(rowIndex)
+    const columnIndex = cell.cellIndex;
+    console.log(columnIndex)
   const category = categories[columnIndex];
+  console.log(category)
+
+
 
   if (!category || !category.clues) {
     console.error('Invalid category or clues are undefined');
@@ -259,12 +274,16 @@ function handleClick(evt) {
  */
 
 function showLoadingView() {
+     const spinner = document.querySelector('#spin-container');
+    spinner.style.display = 'block';
+  }
 
-}
 
 /** Remove the loading spinner and update the button used to fetch data. */
 
 function hideLoadingView() {
+     const spinner = document.querySelector('#spin-container');
+    spinner.style.display = 'none';
 }
 
 /** Start game:
@@ -275,10 +294,26 @@ function hideLoadingView() {
  * */
 
 async function setupAndStart() {
-}
+     const startButton = document.getElementById('start');
+    if (startButton.textContent === 'Start!'){
+      showLoadingView();
+      categories = [];
+      try {
+        await fillTable();
+        hideLoadingView();
+        startButton.textContent = 'New Board';
+      } catch (error) {
+        console.error('Error setting up and starting the game:', error);
+        hideLoadingView();
+      }
+    } else if (startButton.textContent === 'New Board') {
+      location.reload();
+    }
+  }
 
+  document.getElementById('start').addEventListener('click', setupAndStart);
 /** On click of start / restart button, set up game. */
-$("#start").on("click", fillTable);
+
 // TODO
 
 /** On page load, add event handler for clicking clues */

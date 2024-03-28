@@ -1,0 +1,27 @@
+
+
+.answer{
+    background-color: lightgreen;
+  }
+  
+  #jeopardy {
+    margin: 20px auto;
+    border-collapse: collapse;
+  }
+  
+  #jeopardy th, #jeopardy td {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: center;
+    min-width: 50px;
+    min-height: 50px;
+  }
+  
+  #jeopardy th {
+    background-color: blue; 
+    color: white;
+  }
+  
+  #jeopardy tbody td {
+    cursor: pointer;
+  }
