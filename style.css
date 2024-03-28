@@ -20,8 +20,14 @@
   #jeopardy th {
     background-color: blue; 
     color: white;
+    table-layout:fixed;
   }
   
   #jeopardy tbody td {
     cursor: pointer;
+  }
+
+  .tdbody {
+    height: 8em;
+    table-layout:fixed;
   }

@@ -119,7 +119,7 @@ getCategoryIds()
 async function getCategory(catId) {
     
       const response = await axios.get(`${APIURL}/category?id=${catId}`);
-     //get and store required data from api
+     //get and store data from api
       const categoryData = {
           title: response.data.title,
           clues: response.data.clues.map(clue => ({
@@ -153,17 +153,10 @@ async function fillTable() {
     // Setting this to '' clears the existing table header
 
     let categoryIds = [];
-    try {
+    
         categoryIds = await getCategoryIds();
-    } catch (error) {
-        console.error('Error fetching category IDs:', error);
-        return;
-    }
-    if (!categoryIds || categoryIds.length === 0) {
-        console.error('No category IDs fetched.');
-        return;
-    }
-    //This helps us fetch the category IDs. It will stop the execution if there is either an error fetching the IDs, or if there aren't any IDs being fetched.
+   
+   
 
     const selectedCategories = []; // Array to store selected category IDs
 
@@ -197,11 +190,12 @@ async function fillTable() {
 
     for (let i = 0; i < 5; i++) {
       const tr = document.createElement('tr');
-      //tr.class = "col";
+      //add class to tr
       tr.classList.add("col");
       console.log(tr)
       for (let j = 0; j < 6; j++) {
         const td = document.createElement('td');
+        td.classList.add('tdbody');
         td.textContent = '?';
         td.addEventListener('click', handleClick);
         tr.appendChild(td);
