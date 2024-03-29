@@ -49,40 +49,58 @@ const five = 5
   
 
 
-  console.log(res);
+  console.log(typeof res.data, res.data);
 
   let topicID = res.data.map((topic) => topic.id);
   console.log(typeof topicID);
   console.log(topicID);
   // Convert the keys of the object to an array
  let keys = Object.keys(topicID);
-
- // Shuffle the array
-for (let i = keys.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    let temp = keys[i];
-    keys[i] = keys[j];
-    keys[j] = temp;
-
-
+ console.log(keys);
+ // Shuffle the array   <-------------- shuffled code used later------------>
+//for (let i = keys.length - 1; i > 0; i--) {
+//    let j = Math.floor(Math.random() * (i + 1));
+///   let temp = keys[i];
+// /   keys[i] = keys[j];
+//    keys[j] = temp;
 
 
 
 
 
-}
 
-// Get the first 6 numbers from the array
-let randomKeys = keys.slice(0, 20);
-console.log(randomKeys);
-// log 6 random keys from the object
 
-//filter out and remove from array bad ID's'
+//}
+
+
+let response = keys
+
+
+response.forEach(function(item) {
+console.log(item.name);
+});
+console.log(response);
+
+console.log(typeof keys, keys);
+
+
+
+// Get 20 and add ids from the array//------ did later ---------
+//let randomKeys = keys.slice(0, 20);
+//console.log(typeof randomKeys);
+// log 6 random keys from the object//------ did later ---------
+
+
+
+
+
+
+//filter out and remove from array bad ID's'/ figured out a fix but will leave code 
 let numbersToRemove = [0, 7, 1, 5];
 
     let filteredCategoryIds = topicID.filter(item => !numbersToRemove.includes(item));
 
-console.log(filteredCategoryIds); // [1, 2, 4, 5, 8, 9]
+console.log(filteredCategoryIds); 
     
    
 
@@ -98,10 +116,10 @@ console.log(filteredCategoryIds); // [1, 2, 4, 5, 8, 9]
 
  
 
-  return filteredCategoryIds;
+  return topicID;
 }
 
-getCategoryIds()
+//getCategoryIds()
 /** Return object with data about a category:
  *
  *  Returns { title: "Math", clues: clue-array }
@@ -116,10 +134,10 @@ getCategoryIds()
 
 
 
-async function getCategory(catId) {
+async function getCategory(getCat) {
     
-      const response = await axios.get(`${APIURL}/category?id=${catId}`);
-     //get and store data from api
+      const response = await axios.get(`${APIURL}/category?id=${getCat}`);
+     //get and store required data from api
       const categoryData = {
           title: response.data.title,
           clues: response.data.clues.map(clue => ({
@@ -152,32 +170,35 @@ async function fillTable() {
     tableHead.innerHTML = ''; 
     // Setting this to '' clears the existing table header
 
+    //make empty id array 
     let categoryIds = [];
     
         categoryIds = await getCategoryIds();
-   
-   
+    console.log(categoryIds)
+    
 
     const selectedCategories = []; // Array to store selected category IDs
+     
 
+    //loop to get random id
     for (let i = 0; i < 6; i++) {
         let catId;
         do {
             catId = categoryIds[Math.floor(Math.random() * categoryIds.length)];
         } while (selectedCategories.includes(catId)); // Keep selecting until a unique category ID is found
-
+        
         selectedCategories.push(catId); // Add the selected category ID to the array
 
-       
+        console.log(catId)
        console.log(selectedCategories)
        
        
-       
+       //use function getCategory to append info to th enter class col for bootstrap
         const category = await getCategory(catId);
         if (category) {
             const th = document.createElement('th');
             console.log(th)
-             th.classList.add("col");
+             th.classList.add("col-2");
             th.textContent = category.title;
             tableHead.appendChild(th);
             categories.push(category);
@@ -190,12 +211,12 @@ async function fillTable() {
 
     for (let i = 0; i < 5; i++) {
       const tr = document.createElement('tr');
-      //add class to tr
-      tr.classList.add("col");
+      //tr.class = "col";
+      tr.classList.add("col-lg-2");
       console.log(tr)
       for (let j = 0; j < 6; j++) {
         const td = document.createElement('td');
-        td.classList.add('tdbody');
+       td.classList.add("col-4", "col-lg-2");
         td.textContent = '?';
         td.addEventListener('click', handleClick);
         tr.appendChild(td);
@@ -219,43 +240,60 @@ function handleClick(evt) {
     const cell = evt.target;
   console.log(cell)
   
-    const rowIndex = cell.parentNode.rowIndex - 2; //We use -2 here to account for the array index starting at 0, and the table head not counting for questions. This hard-coding is not best practice but it fixes the current issue.
+    const rowIndex = this.parentNode.rowIndex - 2; //We use -2 here to account for the array index starting at 0, and the table head not counting for questions. This hard-coding is not best practice but it fixes the current issue.
   console.log(rowIndex)
-    const columnIndex = cell.cellIndex;
+    const columnIndex = this.cellIndex;
     console.log(columnIndex)
   const category = categories[columnIndex];
   console.log(category)
 
-
-
-  if (!category || !category.clues) {
-    console.error('Invalid category or clues are undefined');
-    return;
-  }
-  if (rowIndex < 0 || rowIndex > category.clues.length) {
-    console.error('Invalid row index');
-    return;
-  }
+  
   
   const clue = category.clues[rowIndex];
-  if (!clue) {
-    console.error('Clue is undefined');
-    return;
-  }
+  
+  console.log(clue)
+ 
 
  
   if (!clue.showing) {
-    cell.textContent = clue.question;
+   console.log(!clue.showing)
+  
+  cell.textContent = clue.question;
+    
+    console.log(cell.textContent)
+    
+    
     clue.showing = 'question';
+    console.log(clue.showing)
     cell.classList.add('clicked');
+  
   } else if (clue.showing === 'question') {
   //   cell.textContent = '';
   //   clue.showing = 'hidden';
   //   cell.classList.remove('clicked');
   // } else if (clue.showing === 'hidden') {
-    cell.textContent = clue.answer;
-    clue.showing = 'answer';
-    cell.classList.add('answer');
+   
+  
+  //remove html tags from textContent, remove the escape characters
+  cell.innerHTML  = clue.answer.replace('\\',"");
+  //  let cellAnswer = cell.innerHTML.replace('\\',"")
+   
+    
+    
+    
+    
+  //  console.log(cellAnswer)
+
+  console.log(cell.innerHTML)
+  
+  
+  
+  
+  clue.showing = 'answer';
+    console.log(clue.showing)
+
+  cell.classList.add('answer');
+  
   } else {
     return;
   }

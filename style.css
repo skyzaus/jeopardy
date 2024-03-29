@@ -1,33 +1,39 @@
 
 
-.answer{
-    background-color: lightgreen;
-  }
-  
-  #jeopardy {
-    margin: 20px auto;
-    border-collapse: collapse;
-  }
-  
-  #jeopardy th, #jeopardy td {
-    border: 1px solid #000;
-    padding: 10px;
-    text-align: center;
-    min-width: 50px;
-    min-height: 50px;
-  }
-  
-  #jeopardy th {
-    background-color: blue; 
-    color: white;
-    table-layout:fixed;
-  }
-  
-  #jeopardy tbody td {
-    cursor: pointer;
-  }
+body {
+  background-image: url('https://jboard.tv/download/file.php?id=82&sid=62f257246a5571798dc198b4ae158501');
+  background-size: 100vw 100vh;
 
-  .tdbody {
-    height: 8em;
-    table-layout:fixed;
-  }
+}
+
+.answer{
+  background-color: green;
+}
+
+#jeopardy {
+  margin: 20px auto;
+  border-collapse: collapse;
+}
+
+#jeopardy th, #jeopardy td {
+  border: 2.5px solid rgba(255,255,255,.5);
+  padding: 10px;
+  text-align: center;
+  min-width: 100px;
+
+}
+
+#jeopardy th {
+  background-color: blue; /* Purple */
+  color: white;
+}
+
+#jeopardy tbody td tr{
+  cursor: pointer;
+ 
+}
+
+td{
+ background-color: darkblue;
+  height: 9em;
+}
