@@ -23,7 +23,19 @@ const APIURL = "https://rithm-jeopardy.herokuapp.com/api/";
 //------https://rithm-jeopardy.herokuapp.com/api/categories/------------
 
 
+function getRandomNumbers() {
+  let numbers = [0, 1, 2, 3, 4];
+  for (let i = numbers.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    let temp = numbers[i];
+    numbers[i] = numbers[j];
+    numbers[j] = temp;
+    console.log(gtemp());
+  }
+  return numbers;
+}
 
+console.log(getRandomNumbers());
 
 
 
