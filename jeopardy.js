@@ -30,7 +30,7 @@ function getRandomNumbers() {
     let temp = numbers[i];
     numbers[i] = numbers[j];
     numbers[j] = temp;
-    console.log(gtemp());
+    console.log(temp);
   }
   return numbers;
 }
