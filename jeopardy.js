@@ -12,7 +12,7 @@ async function getCategory() {
   const response = await axios.get(`${APIURL}`);
   const categoryData = {
     title: response.data.category,
-    clues: response.data.question.map((clue) => ({
+    clues: response.data.map((clue) => ({
       question: clue.question,
       answer: clue.correct_answer,
       showing: null,
@@ -32,7 +32,7 @@ async function fillTable() {
   categoryIds = await getCategoryIds();
   
   console.log(categoryIds);
-  const selectedCategories = [];
+  // const selectedCategories = [];
   for (let i = 0; i < 6; i++) {
     // let catId;
     // do {
