@@ -1,26 +1,25 @@
-const APIURL = "https://opentdb.com/api.php?amount=20";
+const APIURL = "https://rithm-jeopardy.herokuapp.com/api/";
 let categories = [];
 async function getCategoryIds() {
-  let res = await axios.get(`${APIURL}`);
-  console.log(res.data.results);
-  //   let topicID = res.data.map((topic) => topic.id);
-  //   let keys = Object.keys(topicID);
-  //   return topicID;
-  return res.data.results;
+  let res = await axios.get(`${APIURL}categories`, {
+    params: {
+      count: 100,
+    },
+  });
+  let topicID = res.data.map((topic) => topic.id);
+  let keys = Object.keys(topicID);
+  return topicID;
 }
-async function getCategory() {
-  const response = await axios.get(`${APIURL}`);
+async function getCategory(getCat) {
+  const response = await axios.get(`${APIURL}/category?id=${getCat}`);
   const categoryData = {
-    title: response.data.category,
-    clues: response.data.map((clue) => ({
+    title: response.data.title,
+    clues: response.data.clues.map((clue) => ({
       question: clue.question,
-      answer: clue.correct_answer,
+      answer: clue.answer,
       showing: null,
-   
     })),
-    
   };
-  console.log(categoryData);
   return categoryData;
 }
 async function fillTable() {
@@ -28,25 +27,22 @@ async function fillTable() {
   const tableBody = document.querySelector("tbody");
   tableHead.innerHTML = "";
   let categoryIds = [];
-  const response = await axios.get(`${APIURL}`);
   categoryIds = await getCategoryIds();
-  
-  console.log(categoryIds);
-  // const selectedCategories = [];
+  const selectedCategories = [];
   for (let i = 0; i < 6; i++) {
-    // let catId;
-    // do {
-    //   catId = categoryIds[Math.floor(Math.random() * categoryIds.length)];
-    // } while (selectedCategories.includes(catId));
-    // selectedCategories.push(catId);
-    // const category = await getCategory(catId);
-    // if (category) {
+    let catId;
+    do {
+      catId = categoryIds[Math.floor(Math.random() * categoryIds.length)];
+    } while (selectedCategories.includes(catId));
+    selectedCategories.push(catId);
+    const category = await getCategory(catId);
+    if (category) {
       const th = document.createElement("th");
       th.classList.add("col-2");
-      th.textContent = response.data.results[i].category;
+      th.textContent = category.title;
       tableHead.appendChild(th);
-      // categories.push(category);
-    // }
+      categories.push(category);
+    }
   }
   for (let i = 0; i < 5; i++) {
     const tr = document.createElement("tr");
@@ -62,18 +58,12 @@ async function fillTable() {
   }
 }
 
-
-
-
-
-
 function handleClick(evt) {
   const cell = evt.target;
   const rowIndex = this.parentNode.rowIndex - 2;
   const columnIndex = this.cellIndex;
   const category = categories[columnIndex];
-  console.log(category);
-  const clue =  category.clues[rowIndex];
+  const clue = category.clues[rowIndex];
   if (!clue.showing) {
     this.textContent = clue.question;
     clue.showing = "question";
@@ -86,11 +76,6 @@ function handleClick(evt) {
     return;
   }
 }
-
-
-
-
-
 
 function showLoadingView() {
   const spinner = document.querySelector("#spin-container");
